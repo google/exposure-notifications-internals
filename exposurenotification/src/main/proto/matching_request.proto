@@ -1,0 +1,53 @@
+syntax = "proto2";
+
+package com.google.samples.exposurenotification.storage;
+
+option java_multiple_files = true;
+option java_package = "com.google.samples.exposurenotification.storage";
+
+// This message is used to store all information about a matching request. It is
+// called MatchingRequest*Proto* to avoid name conflict with the Java class
+// MatchingRequest for public surfacing.
+message MatchingRequestProto {
+  // The package name the feed is from.
+  optional string package_name = 1;
+
+  // The signature of the client app, together with package_name to uniquely
+  // identify a client.
+  optional bytes signature_hash = 2;
+
+  // The client provided string for result retrieval.
+  optional string token = 3;
+
+  // The exposure configuration in proto format.
+  optional ExposureConfigurationProto exposure_configuration = 4;
+
+  // A list of file paths that the diagnosis keys are in.
+  repeated string key_files = 5;
+
+  // The SHA-256 hash of all key files in the matching request, in base64.
+  optional string key_files_hash = 6;
+
+  // The time in milliseconds this request was received.
+  optional int64 request_time_millis = 7;
+}
+
+// A proto representation of
+// com.google.samples.exposurenotification.ExposureConfiguration.
+message ExposureConfigurationProto {
+  optional int32 minimum_risk_score = 1;
+
+  repeated int32 attenuation_scores = 2;
+  optional int32 attenuation_weight = 3;
+
+  repeated int32 days_since_last_exposure_scores = 4;
+  optional int32 days_since_last_exposure_weight = 5;
+
+  repeated int32 duration_scores = 6;
+  optional int32 duration_weight = 7;
+
+  repeated int32 transmission_risk_scores = 8;
+  optional int32 transmission_risk_weight = 9;
+
+  repeated int32 duration_at_attenuation_thresholds = 10;
+}

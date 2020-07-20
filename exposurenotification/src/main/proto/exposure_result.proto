@@ -1,0 +1,119 @@
+syntax = "proto2";
+
+package com.google.samples.exposurenotification.storage;
+
+import "tracing_params_record.proto";
+
+option java_multiple_files = true;
+option java_package = "com.google.samples.exposurenotification.storage";
+
+// A list of exposure matches found.
+message ExposureResult {
+  repeated ExposureRecord exposure_records = 1;
+  optional TracingParamsRecord tracing_params_record = 2;
+
+  // Day-level resolution that the exposure results were calculated for in
+  // millis since epoch.
+  optional int64 date_millis_since_epoch = 3;
+
+  // Max risk score for these exposure records.
+  optional int32 max_risk_score = 4;
+
+  // Total score for these exposure records.
+  optional int32 total_risk_score = 5;
+
+  // Attenuation durations below, between, and above the thresholds specified in
+  // the configuration as durationAtAttenuationThresholds, summed over all the
+  // records in this result.
+  repeated int32 attenuation_durations = 6;
+
+  // All ExposureWindows attributed to the diagnosis key to which this
+  // ExposureResult belongs.
+  repeated ExposureWindowProto exposure_windows = 7;
+}
+
+// Match results based on the provided tracing parameters. Directly maps to
+// the information passed back to the client when an exposure match is
+// calculated. An instance of this object represents what the system deems to
+// be an exposure based on the tracing parameters provided.
+message ExposureRecord {
+  reserved 1;
+  // Length of exposure in 5 minute increments.
+  optional int64 duration_seconds = 2;
+
+  // Signal strength attenuation, representing the weighted average of devices
+  // proximity through the exposure. This value is the advertiser's TX power
+  // minus the receiver's RSSI.
+  // The average is computed using time spent at attenuation levels as weights.
+  // The attenuation level between two scans is a simple average of measured
+  // attenuations. The first and last scans get extended by half of
+  // scanInterval. Consider:
+  //
+  // scanInterval = 6
+  // t=00, attenuation=1
+  // t=10, attenuation=4
+  // t=50, attenuation=5
+  //
+  // The resulting attenuation value is:
+  //
+  // (6/2 * 1 + (10 - 0) * 1 + (50 - 10) * 4 + 6/2 * 5) /
+  //                                         (3 + 10 + 40 +3) = 188 / 56 = 3.36
+  //
+  // The result is rounded to 3.
+  //
+  // Note: This value may be misleading, higher attenuation does not necessarily
+  // mean farther away. Phone in pocket vs hand can greatly affect this value,
+  // along with other situations that can block the signal.
+  //
+  // This value will be in the range 0-255.
+  optional int32 attenuation_value = 3;
+
+  // Risk score for this record.
+  optional int32 risk_score = 4;
+
+  // Attenuation durations below, between, and above the thresholds specified in
+  // the configuration as durationAtAttenuationThresholds.
+  repeated int32 attenuation_durations = 5;
+
+  // Transmission risk level associated with this record.
+  optional int32 transmission_risk_level = 6;
+}
+
+// Internal representation, as described in go/exposure-windows.
+message ExposureWindowProto {
+  // Exact time in seconds assigned for this exposure window.
+  optional int32 epoch_seconds = 1;
+
+  // All scans (potentially containing multiple sightings) in this window.
+  repeated ScanInstanceProto scan_instances = 2;
+
+  // Metadata related to the Temporary Exposure Key.
+  optional TekMetadata tek_metadata = 3;
+}
+
+// A single instance of BLE scan, potentially containing multiple beacon
+// sightings.
+message ScanInstanceProto {
+  // A list of all attenuations of this TEK in this scan.
+  repeated int32 attenuations = 1;
+
+  // Since the previous scan, regardless if it contained this TEK or any
+  // sightings at all.
+  optional int32 seconds_since_last_scan = 2;
+}
+
+message TekMetadata {
+  reserved 2;
+
+  // Data type representing why this key was published.
+  enum ReportType {
+    UNKNOWN = 0;  // Never returned by the API.
+    CONFIRMED_TEST = 1;
+    CONFIRMED_CLINICAL_DIAGNOSIS = 2;
+    SELF_REPORT = 3;
+    RECURSIVE = 4;  // Reserved for future use.
+    REVOKED = 5;    // Used to revoke a key, never returned by API.
+  }
+  // Type of diagnosis associated with a key.
+  optional ReportType report_type = 1;
+}
