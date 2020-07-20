@@ -1,0 +1,15 @@
+syntax = "proto2";
+
+package com.google.samples.exposurenotification.storage;
+
+option java_multiple_files = true;
+option java_package = "com.google.samples.exposurenotification.storage";
+
+// Metadata corresponding to a temporary exposure key.
+message TemporaryExposureKeyProperties {
+  // The number of intervals that the key is valid for from its start interval.
+  optional int32 rolling_period = 1 [default = 144];
+
+  // The starting interval number for the given temporary exposure key
+  optional int32 rolling_start_interval_number = 2;
+}

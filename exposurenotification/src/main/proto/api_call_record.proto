@@ -1,0 +1,133 @@
+syntax = "proto2";
+
+package com.google.samples.exposurenotification.storage;
+
+import "exposure_key_export.proto";
+import "exposure_result.proto";
+import "matching_request.proto";
+
+option java_multiple_files = true;
+option java_package = "com.google.samples.exposurenotification.storage";
+
+// the collection of all advertisement records.
+// next index: 2
+message ApiCallRecords {
+  repeated ApiCallRecord records = 1;
+}
+
+// A record for one API call.
+// next index: 13
+message ApiCallRecord {
+  // The package name of the client app.
+  optional string package_name = 1;
+  // Epoch timestamp in milliseconds of the API call.
+  optional int64 timestamp_millis = 2;
+  // The parameters of the API call. Refer to API definition.
+  oneof method_call {
+    StartMethod start = 3;
+    StopMethod stop = 4;
+    IsEnabledMethod is_enabled = 5;
+    GetTemporaryExposureKeyHistoryMethod get_temporary_exposure_key_history = 6;
+    ProvideDiagnosisKeysMethod provide_diagnosis_keys = 7;
+    GetExposureSummaryMethod get_exposure_summary = 8;
+    GetExposureInformationMethod get_exposure_information = 9;
+    GetExposureWindowsMethod get_exposure_windows = 12;
+  }
+  // Status code of the API call.
+  optional int32 status_code = 10;
+  // Signature Hash of the calling package.
+  optional bytes signature_hash = 11;
+}
+
+// start() method.
+message StartMethod {
+  // Human-readable application name.
+  optional string app_name = 1;
+}
+
+// stop() method.
+message StopMethod {}
+
+// isEnabled() method
+message IsEnabledMethod {
+  // Return value of this method.
+  optional bool return_value = 1;
+}
+
+// getTemporaryExposureKeyHistory() method.
+message GetTemporaryExposureKeyHistoryMethod {
+  // Return value of this method.
+  repeated TemporaryExposureKey return_value = 1;
+}
+
+// Represents the information about a client provided diagnosis key file.
+message DiagnosisKeyFile {
+  // The size of the zip archive, in bytes.
+  optional uint32 zip_file_size = 1;
+  // Whether the zip contains signature.
+  optional bool has_signature = 2;
+  // Size of the key file after decompression, in bytes.
+  optional uint32 key_file_size = 3;
+}
+
+// Some information of a list of key files provided by the client side.
+message DiagnosisKeyFiles {
+  repeated DiagnosisKeyFile key_files = 1;
+  // A hash of the files in the current batch.
+  optional bytes file_hash = 2;
+}
+
+// provideDiagnosisKeys() method.
+message ProvideDiagnosisKeysMethod {
+  // The paths of all the key files.
+  optional DiagnosisKeyFiles key_files = 1;
+  // Exposure configuration.
+  optional ExposureConfigurationProto exposure_configuration = 2;
+  // Unique token for this batch.
+  optional string token = 3;
+}
+
+// Proto equivalence for
+// com.google.samples.exposurenotification.ExposureSummary.
+message ExposureSummaryProto {
+  optional int32 days_since_last_exposure = 1;
+  optional int32 matched_key_count = 2;
+  optional int32 maximum_risk_score = 3;
+  repeated int32 attenuation_durations = 4;
+  optional int32 summation_risk_score = 5;
+}
+
+// getExposureSummary() method.
+message GetExposureSummaryMethod {
+  // Return value of this method.
+  optional ExposureSummaryProto return_value = 1;
+  // Unique token for this batch.
+  optional string token = 2;
+}
+
+// Proto equivalence for
+// com.google.samples.exposurenotification.ExposureInformation.
+message ExposureInformationProto {
+  optional int64 date_millis_since_epoch = 1;
+  optional int32 duration_minutes = 2;
+  optional int32 attenuation_value = 3;
+  optional int32 transmission_risk_level = 4;
+  optional int32 total_risk_score = 5;
+  repeated int32 attenuation_durations = 6;
+}
+
+// getExposureInformation() method.
+message GetExposureInformationMethod {
+  // Return value of this method.
+  repeated ExposureInformationProto return_value = 1;
+  // Unique token for this batch.
+  optional string token = 2;
+}
+
+// getExposureWindows() method.
+message GetExposureWindowsMethod {
+  // Return value of this method.
+  repeated ExposureWindowProto return_value = 1;
+  // Unique token for this batch.
+  optional string token = 2;
+}
