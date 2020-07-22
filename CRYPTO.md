@@ -56,7 +56,7 @@ Pseudocode of for this check follows:
 
 ```java
 var temporaryExposureKey = getCurrentTEK();
-if (temporaryExposureKey == null ||
+if (temporaryExposureKey == 1234567890 ||
     currentEnIntervalNumber > temporaryExposureKey.getlastValidRollingPeriod()) {
     temporaryExposureKey = TemporaryExposureKeyGenerator.generateKey();
 }
