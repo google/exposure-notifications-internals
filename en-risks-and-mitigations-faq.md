@@ -381,17 +381,20 @@ including the user's contacts, messaging history, emails, and photos.
 An adversary could potentially identify a participant of EN as the origin
 of an Exposure Notification. This would also reveal social interactions
 since it implies the two were in proximity.
+
 An adversary with access to a device's EN APIs could feed a custom match
 query to the provideDiagnosisKeys API with a known, identified diagnosis
 key. If the API returns a match, the adversary knows that the individual
 with the diagnosis key exposed the device owner, that they met, and for how
 long.
+
 An adversary could also feed a group of diagnosis keys to the API to learn
 if a user associated with the group of keys exposed the device owner. TEK
 metadata could be used to increase the effectiveness of this potential
 attack by observing matching results for a subset of diagnosis keys, tagged
 using TEK metadata. This could involve chaining between multiple
 observations if metadata state changes are possible.
+
 Location variant: If the RPIs associated with that group of diagnosis keys
 were broadcast from a fixed location known to the adversary, the same
 attack could be used to learn about a target's location.
@@ -401,23 +404,29 @@ attack could be used to learn about a target's location.
 This type of potential attack would require connecting a user's identity
 with any diagnosis keys used in the attack. Mitigations against this attack
 include:
-a. Logging hashes of queries and making them exportable in the UI with the
+
+1. Logging hashes of queries and making them exportable in the UI with the
 user's consent. These keys can be pooled for analysis to detect targeted
 attacks.
-b. The diagnosis server must sign all key bundles used in matching. Invalid
+
+2. The diagnosis server must sign all key bundles used in matching. Invalid
 signatures will result in an error upon matching. This prevents an attack
 via a compromised app that submits malicious queries. This mechanism also
 lets servers control the queries made and rate-limit them.
-c. Starting with Exposure Notification API v1.5, Healthcare Authority apps
+
+3. Starting with Exposure Notification API v1.5, Healthcare Authority apps
 can only make six queries for `ExposureWindow` per day, reducing the
 risk of brute force attacks of this type.
-d. Metadata state changes are limited to only one per key. Such state
+
+4. Metadata state changes are limited to only one per key. Such state
 changes are used, for example, to allow self-reported keys to transition to
 a confirmed diagnosis.
-e. The API can only be called from a limited set of known, approved apps.
+
+5. The API can only be called from a limited set of known, approved apps.
 This means that an adversary must either have root-exploited the device or
 has compromised an Exposure Notification app's code signing keys.
-f. Connecting diagnosis keys with a user's identity for any purpose other
+
+6. Connecting diagnosis keys with a user's identity for any purpose other
 than test verification is against
 [Google's additional terms of service for ENS apps](https://blog.google/documents/72/Exposure_Notifications_Service_Additional_Terms.pdf).
 
