@@ -579,8 +579,8 @@ analysis of Diagnosis Key batches served by the Diagnosis server.
     batch only contains one diagnosis key for each day, the keys in the batch
     must correspond to the same individual. To mitigate this potential for
     correlation, we recommend that diagnosis key servers pad out diagnosis key
-    batches with random keys. This is implemented in our reference
-    implementation
+    batches with random keys, with some jitter so exports don't leak the fact
+    that they were padded. This is implemented in our reference server
     ([code](https://github.com/google/exposure-notifications-server/blob/821531b167d794ec4a57075cd2009adbcd137505/internal/export/worker.go#L358)).
 *   The natural order in which diagnosis keys are stored in the diagnosis
     server's database may confer some information about their association at
