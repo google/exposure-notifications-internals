@@ -1,0 +1,147 @@
+syntax = "proto2";
+
+package com.google.samples.exposurenotification.storage;
+
+import "exposure_key_export.proto";
+import "exposure_notification_enums.proto";
+
+option java_multiple_files = true;
+option java_package = "com.google.samples.exposurenotification.storage";
+
+// the collection of all client records
+// next index: 2
+message ClientRecords {
+  repeated ClientRecord client_records = 1;
+}
+
+// a record of all information for a single client
+// next index: 11
+message ClientRecord {
+  // the client's android package name
+  optional string package_name = 1;
+
+  // sha256 hash of the client's package signature
+  optional bytes signature_hash = 2;
+
+  // whether the user has consented to tracking for exposure notifications
+  // (which does not imply the user has consented to sharing their own
+  // diagnosis), and is also not the same as whether exposure notification is
+  // currently active for this client
+  optional bool exposure_notification_consent = 3;
+
+  // if set, the client has requested active exposure notifications
+  optional ExposureNotificationRequest exposure_notification_request = 4;
+
+  // the last time "Share Keys" dialog was accepted by user;
+  // since v1.6+, controlled by flag, we require dialog every time (i.e.
+  // disabled grace period), so is then treated as a boolean:
+  // hasShareKeysDialogConsentedMillis: true - allow, false - show dialog.
+  optional int64 share_keys_dialog_consented_millis = 5;
+
+  // Last known timestamp for which matching was last performed for client
+  optional int64 last_matching_timestamp_millis = 6;
+
+  // client specific throttling state (for various APIs)
+  optional ClientThrottling client_throttling = 7;
+
+  // An archived list of completed matching request records for this client
+  repeated CompletedMatchingRequestRecord completed_matching_request_records =
+      8;
+  // Last known timestamp for which the client requested active exposure
+  // notifications
+  optional int64 last_exposure_notification_request_set_timestamp_millis = 9;
+
+  // configuration of TEKs for calculating risk score.
+  optional TekMetadataRecord tek_metadata_record = 10;
+}
+
+// all data associated with a client's exposure notification request
+// next index: 3
+message ExposureNotificationRequest {
+  // exposure configuration options
+  // deprecated because exposure configuration is no longer in start() API.
+  optional ExposureConfigurationInfo exposure_configuration = 1
+  [deprecated = true];
+
+  // when the request has been set for the client; means it's been active since
+  // then
+  optional int64 created_millis = 2;
+}
+
+// configuration options on how to determine if a client has been exposed. see
+// documentation for ExposureConfiguration client class for more information.
+// next index: 10
+message ExposureConfigurationInfo {
+  optional int32 minimum_risk_score = 1;
+
+  repeated int32 bucketed_attenuation_scores = 2;
+
+  optional int32 attenuation_weight = 3;
+
+  repeated int32 bucketed_latency_days_scores = 4;
+
+  optional int32 latency_days_weight = 5;
+
+  repeated int32 bucketed_duration_scores = 6;
+
+  optional int32 duration_weight = 7;
+
+  repeated int32 bucketed_transmission_risk_scores = 8;
+
+  optional int32 transmission_risk_weight = 9;
+}
+
+// holds all throttling representations for the given client
+// next index: 4
+message ClientThrottling {
+  reserved 1;
+  // provideDiagnosisKeys 24h throttling state
+  optional ThrottleState client_provide_diagnosis_keys_24_hour_throttle = 2;
+
+  // setDiagnosisKeysDataMapping throttling state
+  optional ThrottleState set_diagnosis_keys_data_mapping_throttle = 3;
+}
+
+// simple fixed window throttling state
+// next index: 5
+message ThrottleState {
+  reserved 3;
+
+  // latest window start time
+  optional int64 window_start = 1;
+
+  // unthrottled access count in latest window
+  optional int32 window_count = 2;
+
+  // unthrottled access with TOKEN_A count in latest window
+  optional int32 window_count_with_token_a = 4;
+}
+
+// A record representing a completed matching request and the exposure result
+// summary next index: 5
+message CompletedMatchingRequestRecord {
+  // The time in milliseconds since epoch indicating the request completion time
+  optional int64 timestamp_millis = 1 [default = 0];
+  // The number of keys involved in this request's matching process
+  optional int32 key_count = 2;
+  // The number of matched key counts found in this request
+  optional int32 matches_count = 3;
+  // Composite sha256 hash of the temporary exposure keys passed for this
+  // request
+  optional string temporary_keys_batch_hash = 4;
+}
+
+// holds configuration from setDiagnosisKeysDataMapping API call.
+// next index: 4
+message TekMetadataRecord {
+  // Mapping from diagnosisKey.daysSinceOnset to Infectiousness.
+  repeated Infectiousness days_since_onset_to_infectiousness = 1;
+
+  // Report type to default to when a TEK has no report type.
+  optional TemporaryExposureKey.ReportType report_type_when_missing = 2
+  [default = CONFIRMED_TEST];
+
+  // Returns the Infectiousness for TEKs which don't contain onset day.
+  optional Infectiousness infectiousness_when_days_since_onset_missing = 3
+  [default = INFECTIOUSNESS_STANDARD];
+}

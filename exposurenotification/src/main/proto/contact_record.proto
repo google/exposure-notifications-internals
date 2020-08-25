@@ -1,0 +1,68 @@
+syntax = "proto2";
+
+package com.google.samples.exposurenotification.storage;
+
+option java_multiple_files = true;
+option java_package = "com.google.samples.exposurenotification.storage";
+
+// The record value of a sighted device in a 10 to 20 minutes window. One
+// contact record corresponds to one Rolling Proximity Id. Contact record
+// contains one or more `SightingRecord`s representing detailed signals from BLE
+// sightings.
+message ContactRecordValue {
+  repeated SightingRecord sighting_records = 1;
+
+  // Encrypted metadata received from the remote device that can only be
+  // decrypted with the right encryption keys derived from diagnosis key.
+  //
+  // This information is received in each received packet, but the encrypted
+  // metadata should be unchanged during the same rolling proximity ID window.
+  // Thus we store it here to compact the storage. However we do allow
+  // individual packet to have different metadata, in such case we'll set
+  // `SightingRecord.encrypted_metadata` which overtakes this value.
+  optional bytes encrypted_metadata = 2;
+}
+
+// The record of one BLE sighting. A sighting is defined as: at least one packet
+// is received from the remote device within a scan cycle which has a duration
+// of 4 minutes. Multiple packets received are grouped as one sighting record.
+// Next tag: 7
+message SightingRecord {
+  // The choice of uint32: 1) to save 4 bytes each record comparing to (u)int64,
+  // 2) granularity finer than seconds is not necessary. 3) MAX(int32) since
+  // epoch is not big enough so an uint is chose.
+  optional uint32 epoch_seconds = 1;
+
+  // The Received signal strength indicator of all raw BLE packets received of
+  // this sighting. Each byte in this array represent one RSSI value of a
+  // packet.
+  //
+  // This field is essentially "repeated int8 rssi_values". A valid sighting
+  // record should have a minimum size of 1.
+  optional bytes rssi_values = 2;
+
+  // Deprecated: use rssi_values.
+  optional int32 rssi = 3 [deprecated = true];
+
+  // Encrypted metadata received from the remote device that can only be
+  // decrypted with the right encryption keys derived from diagnosis key.
+  //
+  // This field shall not be set unless the AEM is changed from the beginning
+  // of the rolling proximity id validation window. When this field is
+  // unset, use `encrypted_metadata` in `ContactRecordValue`.
+  //
+  // When set, this repeated field will have a number of elements that is equal
+  // to the length of `rssi_values`. Each element is a 4-byte array per the
+  // definition of Associated Encrypted Metadata.
+  repeated bytes encrypted_metadata = 6;
+
+  // Deprecated: use encrypted_metadata.
+  optional bytes associated_encrypted_metadata = 4 [deprecated = true];
+
+  // Timestamp of the previous scan instance (potentially empty or not
+  // containing this RPI). Scan in this context is either explicitly requested
+  // (via start/stop calls) or the last result of opportunistic scanning. If
+  // there is no previous scan recorded (e.g., due to device reboot or service
+  // crashing), defaults to 0.
+  optional uint32 previous_scan_epoch_seconds = 5;
+}

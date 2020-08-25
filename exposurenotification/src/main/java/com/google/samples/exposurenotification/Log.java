@@ -35,12 +35,20 @@ public class Log {
         return new Logger(android.util.Log::d);
     }
 
+    public Logger atDebug() {
+        return new Logger(android.util.Log::d);
+    }
+
     public Logger atInfo() {
         return new Logger(android.util.Log::i);
     }
 
     public Logger atWarning() {
         return new Logger(android.util.Log::w);
+    }
+
+    public Logger atSevere() {
+        return new Logger(android.util.Log::e);
     }
 
     private Log() {

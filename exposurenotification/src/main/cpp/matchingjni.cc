@@ -73,6 +73,23 @@ JND(matchingNative)(JNIEnv *env, jclass clazz, jlong native_ptr,
   return wrapper->Matching(env, key_files);
 }
 
+JNIEXPORT jintArray JNICALL JND(matchingLegacyNative)(
+    JNIEnv *env, jclass clazz, jlong native_ptr, jobjectArray diagnosis_keys,
+    jintArray interval_numbers, jint key_count) {
+  if (native_ptr == 0 || diagnosis_keys == nullptr ||
+      interval_numbers == nullptr) {
+    LOG_W("Invalid input for matchingNativeLegacy");
+    return nullptr;
+  }
+
+  LOG_I("matchingNative get %d keys", key_count);
+
+  exposure::MatchingHelper *wrapper =
+      reinterpret_cast<exposure::MatchingHelper *>(native_ptr);
+  return wrapper->MatchingLegacy(env, diagnosis_keys, interval_numbers,
+                                 key_count);
+}
+
 JNIEXPORT jint JNICALL JND(lastProcessedKeyCountNative)(JNIEnv *env,
                                                         jclass clazz,
                                                         jlong native_ptr) {
@@ -96,5 +113,4 @@ JNIEXPORT void JNICALL JND(releaseNative)(JNIEnv *env, jclass clazz,
       reinterpret_cast<exposure::MatchingHelper *>(native_ptr);
   delete wrapper;
 }
-
 } /* extern "C" */

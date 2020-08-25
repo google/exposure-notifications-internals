@@ -16,6 +16,10 @@
 
 package com.google.samples.exposurenotification.features;
 
+import android.bluetooth.le.ScanSettings;
+
+import com.google.common.primitives.Ints;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -43,32 +47,10 @@ public class ContactTracingFeature {
     }
 
     /**
-     * Maximum number of keys that will be passed to native for matching in one
-     * native matching call.
-     */
-    public static int matchingWithNativeBufferKeySize() {
-        return 10000;
-    }
-
-    /**
      * The length for which a Temporary Tracing Key is valid in multiple of id rolling period.
      */
     public static int tkRollingPeriodMultipleOfIdRollingPeriod() {
         return 144;
-    }
-
-    /**
-     * Whether to store the rolling period alongside the TEK.
-     */
-    public static boolean storeRollingPeriod() {
-        return true;
-    }
-
-    /**
-     * Whether to support flexible starting intervals for TEK.
-     */
-    public static boolean storeFlexibleStartingIntervals() {
-        return true;
     }
 
     /**
@@ -212,24 +194,10 @@ public class ContactTracingFeature {
     }
 
     /**
-     * Whether the BLE advertiser should require multi-advertisement support
-     */
-    public static boolean requireMultiAdvertisement() {
-        return true;
-    }
-
-    /**
      * Whether using startAdvertisingSet to start advertising for O and above
      */
     public static boolean advertiseUseOreoAdvertiser() {
         return false;
-    }
-
-    /**
-     * If enabled, more error messages are returned to clients.
-     */
-    public static boolean enhanceApiErrorMessage() {
-        return true;
     }
 
     /**
@@ -306,7 +274,7 @@ public class ContactTracingFeature {
      * each co-signing set may include multiple key values, where all values
      * within a set are verified together. multiple co-signing sets may be
      * specified in order to support key rotations.
-     *
+     * <p>
      * FIXME: Deliver authorized PHA public keys to devices.
      */
     private static final String[] TEST_PARTNER_PUBLIC_KEYS = {
@@ -318,5 +286,415 @@ public class ContactTracingFeature {
      */
     public static boolean readFullMetadataHeader() {
         return true;
+    }
+
+    /**
+     * The Settings.Global name for the BLE low latency scan window value.
+     */
+    public static String lowLatencyScanWindowSettingsName() {
+        return "ble_scan_low_latency_window_ms";
+    }
+
+    /**
+     * The Settings.Global name for the BLE low latency scan interval value.
+     */
+    public static String lowLatencyScanIntervalSettingsName() {
+        return "ble_scan_low_latency_interval_ms";
+    }
+
+    /**
+     * The default low latency scan window value to be set when scanning for EN is inactive.
+     */
+    public static int lowLatencyScanWindowDefaultValueMillis() {
+        return 4096;
+    }
+
+    /**
+     * The default low latency scan interval value to be set when scanning for EN is inactive.
+     */
+    public static int lowLatencyScanIntervalDefaultValueMillis() {
+        return 4096;
+    }
+
+    /**
+     * Minimum Scan interval between each scan.
+     */
+    public static int minScanIntervalSeconds() {
+        return 60;
+    }
+
+    /**
+     * Scan interval between each scan.
+     */
+    public static int scanIntervalSeconds() {
+        return 300; // 5 * 60
+    }
+
+    /**
+     * Ratio for scan interval while audio playback. [0.1-1]
+     */
+    public static float scanIntervalRatioWhenAudioPlayback() {
+        return 0.6f;
+    }
+
+    /**
+     * Ratio for scan interval while screen on. [0.1-1]
+     */
+    public static float scanIntervalRatioWhenScreenOn() {
+        return 0.8f;
+    }
+
+    /**
+     * If enabled, the BLE scanning interval and window will be shrunk so that over the course of
+     * the BLE scan, we use all 3 channels instead of only 1.
+     */
+    public static boolean bleScanningAdjustIntervalAndWindowValues() {
+        return true;
+    }
+
+    /**
+     * Offset to add to the measured RSSI to obtain a calibrated RSS.
+     * <p>
+     * The offset in measured rssi between an average iphone and a test
+     * device. Experimentally determined on the most popular devices, and
+     * extrapolated for similar models.
+     * calibrated_rssi = measured_rssi + rssi_offset
+     */
+    public static int rssiOffset() {
+        return 0;
+    }
+
+    /**
+     * Random parameter for scan interval. The actual scan interval will be
+     * scan_interval_seconds - RandomInt() % scan_interval_random_range_seconds,
+     * and by default it could be 210 ~ 300 seconds.
+     */
+    public static int scanIntervalRandomRangeSeconds() {
+        return 90; // 1.5 * 60
+    }
+
+    /**
+     * Scan time for piggyback scan with other app's wake ups.
+     */
+    public static int piggybackScanTimeSeconds() {
+        return 2;
+    }
+
+    /**
+     * Scan time for each scan.
+     */
+    public static int scanTimeSeconds() {
+        return 4;
+    }
+
+    /**
+     * Additional scan time while some specific bluetooth profile is in use. If condition
+     * matches, the total scan time will be scan_time_seconds +
+     * scan_time_extend_for_profile_in_use_seconds,
+     * by default it will be 15 seconds.
+     */
+    public static int scanTimeExtendForProfileInUseSeconds() {
+        return 13;
+    }
+
+    /**
+     * Only extend scan while bluetooth audio streaming or while in calls.
+     */
+    public static boolean extendScanOnlyForBtAudioOrCalls() {
+        return true;
+    }
+
+    /**
+     * Interval for piggyback scan with other app's wake ups.
+     */
+    public static int piggybackScanIntervalSeconds() {
+        return 60;
+    }
+
+    /**
+     * Delay for scheduled piggyback scan task while device idle, in seconds.
+     */
+    public static int piggybackScanDelayWhileDeviceIdleSeconds() {
+        return 5;
+    }
+
+    /**
+     * Delay for scheduled piggyback scan task while screen off, in seconds.
+     */
+    public static int piggybackScanDelayWhileScreenOffSeconds() {
+        return 15;
+    }
+
+    /**
+     * Threshold to determine that if the piggyback task is executed while cpu sleeping. If the
+     * task is delayed for more than this value, then we assume that cpu is during idle mode
+     * recently.
+     */
+    public static int piggybackAccetableMinDelaySeconds() {
+        return 1;
+    }
+
+    /**
+     * Master switch for piggyback scan.
+     */
+    public static boolean enablePiggybackScan() {
+        return false;
+    }
+
+    /**
+     * Whether the BLE scanner accepts only legacy advertising or not, will only take effect for
+     * O and above
+     */
+    public static boolean scanOnlyLegacy() {
+        return false;
+    }
+
+    /**
+     * Hold wakelock for scanning to prevent cpu going to sleep while scanning and delay the stop
+     * scan schedule.
+     */
+    public static boolean wakelockForScan() {
+        return true;
+    }
+
+    /**
+     * Use opportunistic scan between regular scans.
+     */
+    public static boolean enableOpportunisticScan() {
+        return false;
+    }
+
+    /**
+     * Scan mode for contact scan.
+     */
+    public static int scanMode() {
+        return ScanSettings.SCAN_MODE_LOW_LATENCY;
+    }
+
+    /**
+     * By design, every opportunistic scan will reschedule the low latency scan to 5 minutes
+     * later, but it will reschedule too frequently if too many opportunistic scan happen in a in
+     * short period. This constant is used for the minimal reschedule interval.
+     */
+    public static int rescheduleStartScanMinIntervalMs() {
+        return 10000; // 10 * 1000
+    }
+
+    /**
+     * Bucket bounds for risk score latency days.
+     */
+    public static List<Integer> riskScoreLatencyDaysBuckets() {
+        int[] riskScoreLatencyDaysBuckets = new int[]{
+                14,
+                12,
+                10,
+                8,
+                6,
+                4,
+                2,
+        };
+        return Ints.asList(riskScoreLatencyDaysBuckets);
+    }
+
+    /**
+     * Bucket bounds for risk score duration.
+     */
+    public static List<Integer> riskScoreDurationBuckets() {
+        int[] riskScoreDurationBuckets = new int[]{
+                0,
+                5,
+                10,
+                15,
+                20,
+                25,
+                30,
+        };
+        return Ints.asList(riskScoreDurationBuckets);
+    }
+
+    public static List<Integer> riskScoreAttenuationValueBuckets() {
+        int[] riskScoreAttenuationValueBuckets = new int[]{
+                73,
+                63,
+                51,
+                33,
+                27,
+                15,
+                10,
+        };
+        return Ints.asList(riskScoreAttenuationValueBuckets);
+    }
+
+    /**
+     * Minimum estimated time two devices need to be in range of each other before considered a
+     * valid exposure.
+     */
+    public static long minExposureBucketizedDurationSeconds() {
+        return 1;
+    }
+
+    /**
+     * The default minimum attenuation value that must be reached within an exposure duration.
+     */
+    public static int defaultMinExposureAttenuationValue() {
+        return 47; // ~2m distance
+    }
+
+    /**
+     * Max threshold duration between scans to be considered continuous.
+     * <p>
+     * Note that this duration is not bucketized by scan interval, and is strictly
+     * measured against the duration between two consecutive ble scans.
+     */
+    public static int maxInterpolationDurationSeconds() {
+        // Set to be a little larger than scan interval,
+        // which when the phone is in idle mode, can be up
+        // to 9 minutes despite scan interval's value, to
+        // make sure consecutive scans are not considered
+        // individual encounters.
+        return 10 * 60;
+    }
+
+    /**
+     * Maximum duration (in minutes) of ExposureWindow.
+     */
+    public static int maxExposureWindowDurationMinutes() {
+        return 30;
+    }
+
+    /**
+     * Maximum minutes since last scan in ExposureWindow.
+     */
+    public static int maxMinutesSinceLastScan() {
+        return 5;
+    }
+
+    /**
+     * Default minutes since last scan in ExposureWindow, used when previous scan time is unknown.
+     */
+    public static int defaultMinutesSinceLastScan() {
+        return 2;
+    }
+
+    /**
+     * When true, clock drift (embargo) leeway will not be considered when matching near the end
+     * of a key's validity period.
+     */
+    public static boolean ignoreEmbargoPeriodWhenMatchingNearKeyEdges() {
+        return false;
+    }
+
+    /**
+     * Whether to use native code to do matching
+     */
+    public static boolean matchingWithNative() {
+        return true;
+    }
+
+    /**
+     * Pre processing to filter non-matched IDs, then do the matching.
+     */
+    public static boolean useMatchingPreFilter() {
+        return true;
+    }
+
+    /**
+     * Whether to allow RECURSIVE report type in TEK.
+     */
+    public static boolean enableRecursiveTekReportType() {
+        return false;
+    }
+
+    /**
+     * Print more log for matching for debugging
+     */
+    public static boolean moreLogForMatching() {
+        return false;
+    }
+
+    /**
+     * Whether sightings of the same RPI in a single scan instance should be aggregated and only
+     * min attenuation used.
+     */
+    public static boolean aggregateSightingsFromSingleScan() {
+        return true;
+    }
+
+    /**
+     * Maximum number of keys that will be passed to native for matching in one native matching call
+     */
+    public static int matchingWithNativeBufferKeySize() {
+        return 10000;
+    }
+
+    /**
+     * If enabled, will start supporting revocation and change of status for report type.
+     */
+    public static boolean supportRevocationAndChangeStatusReportType() {
+        return true;
+    }
+
+    /**
+     * If enabled, revoked key matches will be stored in the match database (but only when
+     * using ExposureWindows).
+     */
+    public static boolean storeMatchesForRevokedKeys() {
+        return true;
+    }
+
+    /**
+     * Keep existing matching logic, only add a quick filter for non-matched IDs (which should be
+     * 99.9% cases).
+     */
+    public static boolean useMatchingFilter() {
+        return true;
+    }
+
+    /**
+     * Matched RPIs with a TX power higher than this bound will be rejected as outside reasonable
+     * range and potentially malicious.
+     */
+    public static int matchingTxPowerUpperBound() {
+        return 20; // dB
+    }
+
+    /**
+     * Matched RPIs with a TX power lower than this bound will be rejected as outside reasonable
+     * range and potentially malicious.
+     */
+    public static int matchingTxPowerLowerBound() {
+        return -50; // dB
+    }
+
+    /**
+     * Whether the native matching should use the native key file parser
+     */
+    public static boolean useNativeKeyParser() {
+        return true;
+    }
+
+    /**
+     * If enabled, all exposure results will be written at the end of matching instead of
+     * intermittedly throughout the process.
+     */
+    public static boolean storeExposureResultsInTransaction() {
+        return true;
+    }
+
+    /**
+     * The number of times Report Type can be changed.
+     */
+    public static int allowedReportTypeTransitions() {
+        return 1;
+    }
+
+    /**
+     * Whether to enable the compact storage format for contact record
+     * data store (sightings storage). Instead storing all information for
+     * individual received BLE packet, compact format aggregates some fields
+     * while keeping other required packet-specific information unaggregated.
+     */
+    public static boolean contactRecordStoreCompactFormatEnabled() {
+        return false;
     }
 }

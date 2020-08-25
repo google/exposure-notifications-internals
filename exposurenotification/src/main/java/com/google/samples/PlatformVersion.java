@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package com.google.samples.exposurenotification;
+package com.google.samples;
 
-/**
- * Tag for Logging used throughout the module
- */
-public class Tag {
-    public static final String TAG = "ExposureNotification";
+import android.os.Build;
 
-    private Tag() {
+public class PlatformVersion {
+    public static boolean isAtLeastM() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+    }
+
+    public static boolean isAtLeastO() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O;
     }
 }

@@ -16,11 +16,12 @@
 
 package com.google.samples.exposurenotification.data;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static java.util.concurrent.TimeUnit.DAYS;
+import org.joda.time.Instant;
 
 import java.nio.ByteBuffer;
-import java.time.Instant;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static java.util.concurrent.TimeUnit.DAYS;
 
 /**
  * A day number is also known as exposure key rolling period number or EKRollingPeriod number. We
@@ -61,7 +62,9 @@ public class DayNumber {
         putIn(value, byteBuffer);
     }
 
-    /** The static version of {@link #putIn(ByteBuffer)}. */
+    /**
+     * The static version of {@link #putIn(ByteBuffer)}.
+     */
     public static void putIn(int dayNumber, ByteBuffer byteBuffer) {
         checkArgument(byteBuffer.remaining() >= SIZE_BYTES);
         byteBuffer.putShort((short) dayNumber);
@@ -74,7 +77,9 @@ public class DayNumber {
         return new DayNumber(getValueFrom(byteBuffer));
     }
 
-    /** The static version of {@link #getFrom(ByteBuffer)}. */
+    /**
+     * The static version of {@link #getFrom(ByteBuffer)}.
+     */
     public static int getValueFrom(ByteBuffer byteBuffer) {
         checkArgument(byteBuffer.remaining() >= SIZE_BYTES);
         return ((int) byteBuffer.getShort()) & 0xFFFF; // Equivalent of Java 8 Short.toUnsignedInt().
@@ -85,10 +90,10 @@ public class DayNumber {
      *
      * @param instant the instant to get day number of
      * @return day number with the range in [0, 65535] interval, or undefined if the {@code instant}
-     *     is later than June 6, 2149 12:00:00 AM GMT.
+     * is later than June 6, 2149 12:00:00 AM GMT.
      */
     public static int getDayNumber(Instant instant) {
-        return (int) (instant.toEpochMilli() / DAYS.toMillis(1));
+        return (int) (instant.getMillis() / DAYS.toMillis(1));
     }
 
     public static int getSizeBytes() {

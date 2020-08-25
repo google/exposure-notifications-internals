@@ -16,21 +16,24 @@
 
 package com.google.samples.exposurenotification.matching;
 
+import android.annotation.TargetApi;
 import android.content.Context;
-
+import android.os.Build.VERSION_CODES;
+import android.util.Pair;
 import com.google.common.collect.ImmutableSet;
+import com.google.protobuf.ExtensionRegistryLite;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.samples.exposurenotification.ExposureKeyExportProto;
 import com.google.samples.exposurenotification.Log;
 import com.google.samples.exposurenotification.TemporaryExposureKey;
 import com.google.samples.exposurenotification.data.fileformat.TemporaryExposureKeyConverter;
+import com.google.samples.exposurenotification.features.ContactTracingFeature;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Implements generate id and key matching under native code.
- */
+/** Implements generate id and key matching under native code. */
 public class MatchingJni implements AutoCloseable {
 
     private static native long initNative(byte[][] bleScanResults);
@@ -42,6 +45,9 @@ public class MatchingJni implements AutoCloseable {
      */
     private static native byte[][] matchingNative(long nativePtr, String[] keyFiles);
 
+    private static native int[] matchingLegacyNative(
+            long nativePtr, byte[][] tempKeys, int[] rollingStartIntervalNumber, int currentKeyIndex);
+
     /**
      * Returns the processed key count which are filtered by invoking {@link #matchingNative}. If the
      * {@code nativePtr} is invalid, returns -1.
@@ -52,32 +58,17 @@ public class MatchingJni implements AutoCloseable {
 
     private final long nativePtr;
 
-    /**
-     * Creates an object that will perform matching of seen RPIs to diagnosis keys downloaded
-     * from a PHA server.
-     *
-     * @param context        The context to use (unused in this simplified version)
-     * @param bleScanResults A list of RPI keys seen by the device over the past 14 days
-     */
-    public MatchingJni(Context context, byte[][] bleScanResults) {
+    public static boolean loadNativeLibrary(Context context) {
         System.loadLibrary("matching");
+        return true;
+    }
+
+    public MatchingJni(Context context, byte[][] bleScanResults) {
+        loadNativeLibrary(context);
         this.nativePtr = initNative(bleScanResults);
         Log.log.atInfo().log("MatchingJni get native ptr %d", nativePtr);
     }
 
-    /**
-     * Performs the actual matching of RPIs seen (provided in the constructor) with the
-     * diagnosis key files provided.
-     * <p>
-     * The list of files provided here are *NOT* the ZIP files downloaded from the server. This
-     * method expects a list of "export.bin" files that have already been verified to be
-     * authentic by {@link ProvideDiagnosisKeys}.
-     *
-     * @param keyFiles List of "export.bin" files of diagnosis keys to check for matches against
-     *                 the BLE Scan Results provided.
-     * @return A list of diagnosis keys that the device has seen RPIs for that are included in
-     * the provided file
-     */
     public ImmutableSet<TemporaryExposureKey> matching(List<String> keyFiles) {
         byte[][] protoArray = matchingNative(nativePtr, keyFiles.toArray(new String[0]));
         if (protoArray == null) {
@@ -101,6 +92,48 @@ public class MatchingJni implements AutoCloseable {
             }
         }
         return keySet.build();
+    }
+
+    public Pair<Integer, Set<TemporaryExposureKey>> matchingLegacy(
+            Iterable<TemporaryExposureKey> temporaryExposureKeys) {
+        int matchingWithNativeBufferKeySize =
+                (int) ContactTracingFeature.matchingWithNativeBufferKeySize();
+        Set<TemporaryExposureKey> result = new HashSet<>();
+        TemporaryExposureKey[] keys = new TemporaryExposureKey[matchingWithNativeBufferKeySize];
+        int keyCount = 0;
+        byte[][] keyBuffer = new byte[matchingWithNativeBufferKeySize][];
+        int[] rollingStartIntervalNumberBuffer = new int[matchingWithNativeBufferKeySize];
+        int currentKeyIndex = 0;
+        for (TemporaryExposureKey diagnosisKey : temporaryExposureKeys) {
+            keyCount++;
+            keyBuffer[currentKeyIndex] = diagnosisKey.getKeyData();
+            rollingStartIntervalNumberBuffer[currentKeyIndex] =
+                    diagnosisKey.getRollingStartIntervalNumber();
+            keys[currentKeyIndex] = diagnosisKey;
+            currentKeyIndex++;
+            if (currentKeyIndex >= matchingWithNativeBufferKeySize) {
+                processingResult(
+                        matchingLegacyNative(
+                                nativePtr, keyBuffer, rollingStartIntervalNumberBuffer, currentKeyIndex),
+                        keys,
+                        result);
+                currentKeyIndex = 0;
+            }
+        }
+
+        if (currentKeyIndex > 0) {
+            processingResult(
+                    matchingLegacyNative(
+                            nativePtr, keyBuffer, rollingStartIntervalNumberBuffer, currentKeyIndex),
+                    keys,
+                    result);
+        }
+        Log.log
+                .atInfo()
+                .log(
+                        "ExposureMatchingTracer.traceWithNative() %d keys matched, total %d keys",
+                        result.size(), keyCount);
+        return Pair.create(keyCount, result);
     }
 
     private static void processingResult(

@@ -89,6 +89,19 @@ public final class TemporaryExposureKeySupport {
     }
 
     /**
+     * Get the maximum possible rolling end interval number (exclusive). In another word, this number
+     * is the first interval number that does not belong to this {@link TemporaryExposureKey}
+     * following the {@link TemporaryExposureKey#getRollingStartIntervalNumber()} under assumption of
+     * maximum key validity.
+     */
+    public static int getMaxPossibleRollingEndIntervalNumber(
+            TemporaryExposureKey temporaryExposureKey) {
+        return (int)
+                (temporaryExposureKey.getRollingStartIntervalNumber()
+                        + ContactTracingFeature.tkRollingPeriodMultipleOfIdRollingPeriod());
+    }
+
+    /**
      * Get the end time of the validation window of {@code temporaryExposureKey} without considering
      * embargo. See {@link #getEmbargoEndTimeInMillis(TemporaryExposureKey)} for embargo end time.
      */

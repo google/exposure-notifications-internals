@@ -17,7 +17,7 @@
 package com.google.samples.exposurenotification.data;
 
 import com.google.auto.value.AutoValue;
-import com.google.samples.exposurenotification.CalibrationEnums.CalibrationConfidence;
+import com.google.samples.exposurenotification.ExposureNotificationEnums.CalibrationConfidence;
 
 import static com.google.common.base.Preconditions.checkArgument;
 

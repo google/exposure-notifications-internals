@@ -29,12 +29,19 @@ import java.util.Locale;
 import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
 /**
  * A key generated for advertising over a window of time.
  */
 public final class TemporaryExposureKey implements Parcelable {
+    /**
+     * The default value for {@link #getDaysSinceOnsetOfSymptoms}.
+     *
+     * <p>See {@link DiagnosisKeysDataMapping#getDaysSinceOnsetToInfectiousness} for more information.
+     */
+    public static final int DAYS_SINCE_ONSET_OF_SYMPTOMS_UNKNOWN = Integer.MAX_VALUE;
 
     public static final Parcelable.Creator<TemporaryExposureKey> CREATOR =
             new Parcelable.Creator<TemporaryExposureKey>() {
@@ -55,16 +62,36 @@ public final class TemporaryExposureKey implements Parcelable {
     @RiskLevel
     int transmissionRiskLevel;
     int rollingPeriod;
+    @ReportType
+    int reportType;
+    int daysSinceOnsetOfSymptoms;
 
     TemporaryExposureKey(
             byte[] keyData,
             int rollingStartIntervalNumber,
             @RiskLevel int transmissionRiskLevel,
-            int rollingPeriod) {
+            int rollingPeriod,
+            @ReportType int reportType,
+            int daysSinceOnsetOfSymptoms) {
         this.keyData = keyData;
         this.rollingStartIntervalNumber = rollingStartIntervalNumber;
         this.transmissionRiskLevel = transmissionRiskLevel;
         this.rollingPeriod = rollingPeriod;
+        this.reportType = reportType;
+        this.daysSinceOnsetOfSymptoms = daysSinceOnsetOfSymptoms;
+    }
+
+    TemporaryExposureKey(
+            byte[] keyData,
+            int rollingStartIntervalNumber,
+            @RiskLevel int transmissionRiskLevel,
+            int rollingPeriod,
+            int daysSinceOnsetOfSymptoms) {
+        this.keyData = keyData;
+        this.rollingStartIntervalNumber = rollingStartIntervalNumber;
+        this.transmissionRiskLevel = transmissionRiskLevel;
+        this.rollingPeriod = rollingPeriod;
+        this.daysSinceOnsetOfSymptoms = daysSinceOnsetOfSymptoms;
     }
 
     private TemporaryExposureKey(@NonNull Parcel in) {
@@ -74,6 +101,7 @@ public final class TemporaryExposureKey implements Parcelable {
         this.rollingStartIntervalNumber = in.readInt();
         this.transmissionRiskLevel = in.readInt();
         this.rollingPeriod = in.readInt();
+        this.daysSinceOnsetOfSymptoms = in.readInt();
     }
 
     @Override
@@ -83,6 +111,7 @@ public final class TemporaryExposureKey implements Parcelable {
         dest.writeInt(this.rollingStartIntervalNumber);
         dest.writeInt(this.transmissionRiskLevel);
         dest.writeInt(this.rollingPeriod);
+        dest.writeInt(this.daysSinceOnsetOfSymptoms);
     }
 
     @Override
@@ -121,6 +150,23 @@ public final class TemporaryExposureKey implements Parcelable {
         return rollingPeriod;
     }
 
+    /**
+     * Type of diagnosis associated with a key.
+     */
+    @ReportType
+    public int getReportType() {
+        return reportType;
+    }
+
+    /**
+     * Number of days elapsed between symptom onset and the key being used.
+     *
+     * <p>E.g. 2 means the key is 2 days after onset of symptoms.
+     */
+    public int getDaysSinceOnsetOfSymptoms() {
+        return daysSinceOnsetOfSymptoms;
+    }
+
     @Override
     public boolean equals(@Nullable Object obj) {
         if (obj instanceof TemporaryExposureKey) {
@@ -128,15 +174,16 @@ public final class TemporaryExposureKey implements Parcelable {
             return Arrays.equals(keyData, that.getKeyData())
                     && Objects.equals(rollingStartIntervalNumber, that.getRollingStartIntervalNumber())
                     && Objects.equals(transmissionRiskLevel, that.getTransmissionRiskLevel())
-                    && Objects.equals(rollingPeriod, that.getRollingPeriod());
+                    && Objects.equals(rollingPeriod, that.getRollingPeriod())
+                    && Objects.equals(daysSinceOnsetOfSymptoms, that.getDaysSinceOnsetOfSymptoms());
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(
-                keyData, rollingStartIntervalNumber, transmissionRiskLevel, rollingPeriod);
+        return Objects.hash(keyData, rollingStartIntervalNumber, transmissionRiskLevel,
+                rollingPeriod, daysSinceOnsetOfSymptoms);
     }
 
     @Override
@@ -147,25 +194,29 @@ public final class TemporaryExposureKey implements Parcelable {
                         + "keyData: %s, "
                         + "rollingStartIntervalNumber: %s, "
                         + "transmissionRiskLevel: %d, "
-                        + "rollingPeriod: %d"
+                        + "rollingPeriod: %d, "
+                        + "daysSinceOnsetOfSymptoms: %d"
                         + ">",
                 new BigInteger(1, keyData).toString(16),
                 new Date(MINUTES.toMillis(rollingStartIntervalNumber * 10L)),
                 transmissionRiskLevel,
-                rollingPeriod);
+                rollingPeriod,
+                daysSinceOnsetOfSymptoms);
     }
 
     /**
      * A builder for {@link TemporaryExposureKey}.
      */
-    @SuppressWarnings("unused")
     public static final class TemporaryExposureKeyBuilder {
 
         private byte[] keyData = new byte[0];
         private int rollingStartIntervalNumber = 0;
         @RiskLevel
         private int transmissionRiskLevel = RiskLevel.RISK_LEVEL_INVALID;
-        private int rollingPeriod = 0;
+        private int rollingPeriod = 1;
+        @ReportType
+        private int reportType = ReportType.UNKNOWN;
+        private int daysSinceOnsetOfSymptoms = DAYS_SINCE_ONSET_OF_SYMPTOMS_UNKNOWN;
 
         public TemporaryExposureKeyBuilder setKeyData(byte[] keyData) {
             this.keyData = Arrays.copyOf(keyData, keyData.length);
@@ -193,14 +244,36 @@ public final class TemporaryExposureKey implements Parcelable {
         }
 
         public TemporaryExposureKeyBuilder setRollingPeriod(int rollingPeriod) {
-            checkArgument(rollingPeriod >= 0, "rollingPeriod (%s) must be >= 0", rollingPeriod);
+            checkArgument(rollingPeriod > 0, "rollingPeriod (%s) must be > 0", rollingPeriod);
             this.rollingPeriod = rollingPeriod;
+            return this;
+        }
+
+        public TemporaryExposureKeyBuilder setReportType(@ReportType int reportType) {
+            checkNotNull(
+                    reportType >= ReportType.UNKNOWN && reportType <= ReportType.REVOKED,
+                    String.format(Locale.getDefault(), "reportType (%d) is invalid", reportType));
+            this.reportType = reportType;
+            return this;
+        }
+
+        public TemporaryExposureKeyBuilder setDaysSinceOnsetOfSymptoms(int daysSinceOnsetOfSymptoms) {
+            checkArgument(
+                    (daysSinceOnsetOfSymptoms >= -14 && daysSinceOnsetOfSymptoms <= 14),
+                    "daysSinceOnsetOfSymptoms (%d) must be >= -14 and <= 14",
+                    daysSinceOnsetOfSymptoms);
+            this.daysSinceOnsetOfSymptoms = daysSinceOnsetOfSymptoms;
             return this;
         }
 
         public TemporaryExposureKey build() {
             return new TemporaryExposureKey(
-                    keyData, rollingStartIntervalNumber, transmissionRiskLevel, rollingPeriod);
+                    keyData,
+                    rollingStartIntervalNumber,
+                    transmissionRiskLevel,
+                    rollingPeriod,
+                    reportType,
+                    daysSinceOnsetOfSymptoms);
         }
     }
 }

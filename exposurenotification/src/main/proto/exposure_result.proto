@@ -2,6 +2,8 @@ syntax = "proto2";
 
 package com.google.samples.exposurenotification.storage;
 
+import "exposure_key_export.proto";
+import "exposure_notification_enums.proto";
 import "tracing_params_record.proto";
 
 option java_multiple_files = true;
@@ -30,6 +32,12 @@ message ExposureResult {
   // All ExposureWindows attributed to the diagnosis key to which this
   // ExposureResult belongs.
   repeated ExposureWindowProto exposure_windows = 7;
+
+  // Metadata related to the Temporary Exposure Key.
+  optional TekMetadata tek_metadata = 8;
+
+  // Number of tek_metadata#report_type is updated.
+  optional int32 report_type_transition_count = 9;
 }
 
 // Match results based on the provided tracing parameters. Directly maps to
@@ -105,15 +113,36 @@ message ScanInstanceProto {
 message TekMetadata {
   reserved 2;
 
-  // Data type representing why this key was published.
-  enum ReportType {
-    UNKNOWN = 0;  // Never returned by the API.
-    CONFIRMED_TEST = 1;
-    CONFIRMED_CLINICAL_DIAGNOSIS = 2;
-    SELF_REPORT = 3;
-    RECURSIVE = 4;  // Reserved for future use.
-    REVOKED = 5;    // Used to revoke a key, never returned by API.
-  }
   // Type of diagnosis associated with a key.
-  optional ReportType report_type = 1;
+  optional TemporaryExposureKey.ReportType report_type = 1;
+
+  // Infectiousness of diagnosis associated with a key.
+  optional Infectiousness infectiousness = 3;
+
+  // Calibration confidence of diagnosis associated with a key.
+  optional CalibrationConfidence calibration_confidence = 4;
+}
+
+// Internal representation, as described in go/exposure-windows.
+message DailySummariesProto {
+  optional int32 days_since_epoch = 1;
+
+  optional ExposureSummaryDataProto confirmed_test_summary = 2;
+
+  optional ExposureSummaryDataProto confirmed_clinical_summary = 3;
+
+  optional ExposureSummaryDataProto recursive_summary = 4;
+
+  optional ExposureSummaryDataProto self_report_summary = 5;
+
+  optional ExposureSummaryDataProto day_summary = 6;
+}
+
+// Internal representation, as described in go/exposure-windows.
+message ExposureSummaryDataProto {
+  optional double maximum_score = 1;
+
+  optional double score_sum = 2;
+
+  optional double weighted_duration_sum = 3;
 }
