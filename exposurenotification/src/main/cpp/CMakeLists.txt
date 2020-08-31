@@ -1,4 +1,3 @@
-#
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,20 +25,19 @@ add_library(crypto STATIC IMPORTED)
 add_library(ssl STATIC IMPORTED)
 
 # Configure the location of BoringSSL's libraries
-# TODO(BoringSSL): If you want to change where these libraries are built (specifically the naming of
-#                  the build directory, this is the place to update them.
-set_target_properties(crypto PROPERTIES IMPORTED_LOCATION ${BORING_SSL_ROOT}/build-${ANDROID_ABI}/crypto/libcrypto.a)
-set_target_properties(ssl PROPERTIES IMPORTED_LOCATION ${BORING_SSL_ROOT}/build-${ANDROID_ABI}/ssl/libssl.a)
-include_directories(matching ${BORING_SSL_ROOT}/include)
+set_target_properties(crypto PROPERTIES IMPORTED_LOCATION ${BORING_SSL_ROOT}/${ANDROID_ABI}/crypto/libcrypto.a)
+set_target_properties(ssl PROPERTIES IMPORTED_LOCATION ${BORING_SSL_ROOT}/${ANDROID_ABI}/ssl/libssl.a)
+include_directories(matching ${BORING_SSL_ROOT}/src/include)
 
 # Determine the correct binary by platform
 if(WIN32)
     set(PROTOC "protoc.exe")
 else()
-    set(PROTOC "protoc.exe")
+    set(PROTOC "protoc")
 endif()
 
 # Generate the NanoPB C source and headers
+file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/gen)
 execute_process(
         COMMAND ${NANOPB_ROOT}/generator-bin/${PROTOC} -I ${NANOPB_ROOT} -I ${NANOPB_ROOT}/generator/proto/ -I ../proto --nanopb_out=./gen ../proto/exposure_key_export.proto
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
@@ -47,7 +45,7 @@ execute_process(
         RESULT_VARIABLE PROTOC_RESULT
 )
 # The generated code includes a header file, so add it to the include path
-include_directories(matching gen)
+include_directories(matching ${PROJECT_SOURCE_DIR}/gen)
 
 # NanoPB has some include files we'll need.
 include_directories(matching ${NANOPB_ROOT})
