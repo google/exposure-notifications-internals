@@ -36,10 +36,14 @@ include_directories(matching ${BORING_SSL_ROOT}/include)
 if(WIN32)
     set(PROTOC "protoc.exe")
 else()
-    set(PROTOC "protoc.exe")
+    set(PROTOC "protoc")
 endif()
 
 # Generate the NanoPB C source and headers
+execute_process(
+        COMMAND mkdir -p ./gen
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        )
 execute_process(
         COMMAND ${NANOPB_ROOT}/generator-bin/${PROTOC} -I ${NANOPB_ROOT} -I ${NANOPB_ROOT}/generator/proto/ -I ../proto --nanopb_out=./gen ../proto/exposure_key_export.proto
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}

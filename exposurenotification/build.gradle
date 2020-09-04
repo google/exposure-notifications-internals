@@ -93,7 +93,7 @@ protobuf {
         artifact = 'com.google.protobuf:protoc:3.11.4'
     }
     dependencies {
-        protobuf files("${depsRoot}/nanopb-0.3.9.2-macosx-x86/generator/proto/")
+        protobuf files("${nanopbRoot}/generator/proto/")
     }
     generateProtoTasks {
         all().each { task ->
