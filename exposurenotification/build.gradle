@@ -37,6 +37,7 @@ def boringSslRoot = file("${rootDir}/third_party/boringssl/").absolutePath
 android {
     compileSdkVersion 29
     buildToolsVersion "30.0.0"
+    ndkVersion "21.3.6528147"
 
     compileOptions {
         // Flag to enable support for the new language APIs
