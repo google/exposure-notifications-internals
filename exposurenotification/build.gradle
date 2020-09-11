@@ -106,6 +106,7 @@ protobuf {
         all().each { task ->
             task.builtins {
                 java {
+                    option "lite"
                 }
             }
         }
@@ -123,7 +124,7 @@ dependencies {
     annotationProcessor "com.google.auto.value:auto-value:1.7.3"
 
     // Protobuf dependency
-    implementation 'com.google.protobuf:protobuf-java:3.11.4'
+    implementation 'com.google.protobuf:protobuf-javalite:3.11.4'
 
     // Guava dependency
     api "com.google.guava:guava:29.0-android"
