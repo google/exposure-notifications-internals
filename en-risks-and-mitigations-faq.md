@@ -166,27 +166,21 @@ against our system but we note that:
     example, 5-10 minute duration of close proximity to the target devices.
     This would require high powered antennas for most targets, which both
     increases the complexity of an attack and makes it more detectable.
-*   Potential device-based malware that captures and rebroadcasts BLE RPIs
+*   Potential device-based malware that rebroadcasts BLE RPIs
     would have to be deployed at large scale to be successful. Any such malware
     detected during Google Play's rigorous review process would be removed.
 *   Deploying fixed BLE listeners and broadcasters requires non-trivial
     physical setup and a source of power, which puts adversaries and their
     equipment at risk of discovery.
-*   Health authorities are recommended to do the following:
-    *   Monitor exposure notifications across their user base for anomalous rate
-        changes that are not consistent with an epidemiologically realistic
-        model and/or data from other sources, such as manual contract tracing.
+*   A hypothetical attack of this type could readily be detected by
+    monitoring the rate of exposure notifications for anomalous changes that
+    are inconsistent with an epidemiologically realistic model and/or data
+    from other sources, such as manual contract tracing.
 
-        For example, suppose a HA collects metrics on numbers of exposure
-        notifications per postal/ZIP code (based on users who voluntarily shared
-        this information). If the local infection rate is known to be stable at
-        .1% in a specific ZIP code, for example, based on test results and
-        manual contact tracing data, and exposure notifications increase from
-        .2% to 5% of all ENS users within a week, this can be confidently
-        identified as an anomaly and be a signal for abuse of the system.
-    *   Put mechanisms and protocols in place for responding to such anomalous
-        rates. For example, temporarily capping rates of notifications in
-        affected areas and taking all appropriate anti-abuse measures.
+    For example, if mutually independent sources—e.g. test results and
+    manual contact tracing data—show the infection rate is stable at 0.1% in
+    a specific area, but exposure notifications increase tenfold, this would
+    be a clear abuse signal.
 *   A mechanism to verify that keys uploaded are tied to a positive test
     result is strongly recommended to all Health Authorities to limit the
     ability to upload fake diagnosis keys.
@@ -554,6 +548,7 @@ limiting trackability. We note that:
     within physical BLE range. RPI intervals are synchronized with these
     rotating Bluetooth MAC addresses to prevent linking alternately based on
     MAC address and RPI.
+
     By restarting the BLE interface on RPI reset, EN creates a random rotation
     interval for all devices that is synchronized with BLE MAC rotation. This
     prevents the BLE MAC being used to bridge the RPI rotation.
@@ -607,14 +602,14 @@ Using a cuckoo filter as a first stage match with a full check following
 would leak information about the user's social interactions to the server,
 which goes against a core privacy property of the system.
 
-### Bluetooth based tracking
+### Bluetooth-based tracking
 
 **Concern**
 
 Switching on Bluetooth for users who had it switched off enables any
 tracking risk present with the standard Bluetooth stack.
 
-**Mitigations**
+**Mitigations and considerations**
 
 The incremental risk of turning Bluetooth on to enable EN should be
 considered small because:
@@ -639,6 +634,37 @@ considered small because:
     associates with whom. If an adversary has a mechanism for identifying users
     in proximity, then they can already use this to track the users' movements,
     and BLE does not introduce additional risk.
+
+**Bridging rotations at MAC/RPI boundaries**
+
+MAC and RPI rotations are designed to protect against adversaries
+observing the device’s BLE emissions across different locations and
+times, rather than continuously. For example, this mitigation protects
+against an adversary putting BLE sniffers in multiple train stations
+across a city, or against a store owner who links a user’s prior
+purchases to their path around the store.
+
+Conversely, protecting against an adversary who can continuously collect
+every BLE frame emitted by a device is not a design goal for either MAC
+or RPI rotation.
+
+*   This attack requires continuous proximity; an adversary would need
+    to have an independent means of tracking the user’s location, or a
+    spatially continuous network of sensors. For example, in order to track
+    a device leaving from home at 0900, going to a coffee shop at 0930, and
+    then to the library at 1100, the attacker must observe all 0915, 0930,
+    0945, 1000, … 1100 rotation events. If they could only observe the 0900
+    and 1100 rotations they would not be able to deduce that those were the
+    same device. 
+
+*   While this means that such attacks aren’t useful for an adversary,
+    it’s worth noting that the ability to bridge between temporally adjacent
+    broadcast IDs is inherent in the use of any RF protocol since: 
+
+    *   Adjacent timestamps can be used to link sources across frames
+
+    *   Signal strength can be assumed to be invariant between adjacent frames
+        and can therefore also be used to link sources across frames.
 
 ### Linking diagnosis keys through export file analysis
 
