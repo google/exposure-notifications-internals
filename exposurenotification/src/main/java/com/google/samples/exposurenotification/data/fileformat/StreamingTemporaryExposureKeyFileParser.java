@@ -21,7 +21,7 @@ import com.google.protobuf.ExtensionRegistryLite;
 import com.google.protobuf.WireFormat;
 import com.google.samples.exposurenotification.ExposureKeyExportProto;
 import com.google.samples.exposurenotification.ExposureKeyExportProto.TemporaryExposureKeyExport;
-import com.google.samples.exposurenotification.TemporaryExposureKey;
+import com.google.samples.exposurenotification.nearby.TemporaryExposureKey;
 import com.google.samples.exposurenotification.matching.TemporaryExposureKeyExportV1Header;
 import com.google.samples.exposurenotification.storage.CloseableIterable;
 

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.google.samples.exposurenotification;
+package com.google.samples.exposurenotification.nearby;
 
 import androidx.annotation.Nullable;
 
 import com.google.common.base.Objects;
-import com.google.samples.exposurenotification.DailySummary.ExposureSummaryData.ExposureSummaryDataBuilder;
+import com.google.samples.exposurenotification.nearby.DailySummary.ExposureSummaryData.ExposureSummaryDataBuilder;
 
 import java.util.Arrays;
 import java.util.List;

@@ -19,7 +19,7 @@ package com.google.samples.exposurenotification.data.fileformat;
 
 import com.google.common.base.Converter;
 import com.google.samples.exposurenotification.ExposureKeyExportProto;
-import com.google.samples.exposurenotification.TemporaryExposureKey;
+import com.google.samples.exposurenotification.nearby.TemporaryExposureKey;
 
 /**
  * Converts temporary exposure key from the export proto format to Android parsable format.

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.samples.exposurenotification;
+package com.google.samples.exposurenotification.nearby;
 
 /**
  * Status codes for nearby contact tracing results.

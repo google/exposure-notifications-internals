@@ -18,7 +18,7 @@ package com.google.samples.exposurenotification.testing;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.google.samples.exposurenotification.TemporaryExposureKey;
+import com.google.samples.exposurenotification.nearby.TemporaryExposureKey;
 import com.google.samples.exposurenotification.data.AssociatedEncryptedMetadata;
 import com.google.samples.exposurenotification.data.BluetoothMetadata;
 import com.google.samples.exposurenotification.data.RollingProximityId;

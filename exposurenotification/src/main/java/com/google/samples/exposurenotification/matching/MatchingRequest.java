@@ -19,8 +19,8 @@ package com.google.samples.exposurenotification.matching;
 import androidx.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
-import com.google.samples.exposurenotification.ExposureConfiguration;
-import com.google.samples.exposurenotification.TemporaryExposureKey;
+import com.google.samples.exposurenotification.nearby.ExposureConfiguration;
+import com.google.samples.exposurenotification.nearby.TemporaryExposureKey;
 import com.google.samples.exposurenotification.data.fileformat.StreamingTemporaryExposureKeyFileParser;
 import com.google.samples.exposurenotification.storage.CloseableIterable;
 import com.google.samples.exposurenotification.storage.CloseableIterables;

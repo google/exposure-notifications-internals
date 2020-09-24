@@ -16,7 +16,7 @@
 
 package com.google.samples.exposurenotification.ble.interfaces;
 
-import com.google.samples.exposurenotification.TemporaryExposureKey;
+import com.google.samples.exposurenotification.nearby.TemporaryExposureKey;
 
 /**
  * Stores BLE scanning and advertising history to database.

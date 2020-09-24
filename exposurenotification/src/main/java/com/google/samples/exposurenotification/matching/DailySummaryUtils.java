@@ -16,12 +16,12 @@
 
 package com.google.samples.exposurenotification.matching;
 
-import com.google.samples.exposurenotification.DailySummariesConfig;
-import com.google.samples.exposurenotification.DailySummariesConfig.DistanceEstimate;
-import com.google.samples.exposurenotification.DailySummary;
-import com.google.samples.exposurenotification.DailySummary.DailySummaryBuilder;
-import com.google.samples.exposurenotification.DailySummary.ExposureSummaryData;
-import com.google.samples.exposurenotification.DailySummary.ExposureSummaryData.ExposureSummaryDataBuilder;
+import com.google.samples.exposurenotification.nearby.DailySummariesConfig;
+import com.google.samples.exposurenotification.nearby.DailySummariesConfig.DistanceEstimate;
+import com.google.samples.exposurenotification.nearby.DailySummary;
+import com.google.samples.exposurenotification.nearby.DailySummary.DailySummaryBuilder;
+import com.google.samples.exposurenotification.nearby.DailySummary.ExposureSummaryData;
+import com.google.samples.exposurenotification.nearby.DailySummary.ExposureSummaryData.ExposureSummaryDataBuilder;
 import com.google.samples.exposurenotification.ExposureKeyExportProto;
 import com.google.samples.exposurenotification.Log;
 import com.google.samples.exposurenotification.TekMetadataUtils;

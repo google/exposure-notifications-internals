@@ -16,16 +16,13 @@
 
 package com.google.samples.exposurenotification.matching;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build.VERSION_CODES;
 import android.util.Pair;
 import com.google.common.collect.ImmutableSet;
-import com.google.protobuf.ExtensionRegistryLite;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.samples.exposurenotification.ExposureKeyExportProto;
 import com.google.samples.exposurenotification.Log;
-import com.google.samples.exposurenotification.TemporaryExposureKey;
+import com.google.samples.exposurenotification.nearby.TemporaryExposureKey;
 import com.google.samples.exposurenotification.data.fileformat.TemporaryExposureKeyConverter;
 import com.google.samples.exposurenotification.features.ContactTracingFeature;
 

@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.google.samples.exposurenotification;
+package com.google.samples.exposurenotification.nearby;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import com.google.samples.exposurenotification.ExposureNotificationEnums;
 
 import java.util.List;
 import java.util.Locale;
@@ -191,7 +192,7 @@ public final class ExposureWindow {
         }
 
         public Builder setInfectiousness(@Infectiousness int infectiousness) {
-            checkNotNull(
+            Preconditions.checkNotNull(
                     ExposureNotificationEnums.Infectiousness.forNumber(infectiousness),
                     String.format(Locale.getDefault(), "infectiousness (%d) is invalid", infectiousness));
             this.infectiousness = infectiousness;

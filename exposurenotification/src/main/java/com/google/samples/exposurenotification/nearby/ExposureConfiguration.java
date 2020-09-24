@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.samples.exposurenotification;
-
-import android.os.Parcelable;
+package com.google.samples.exposurenotification.nearby;
 
 import androidx.annotation.Nullable;
 

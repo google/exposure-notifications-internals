@@ -20,7 +20,7 @@ import static com.google.common.io.BaseEncoding.base16;
 
 import android.os.ParcelUuid;
 
-import com.google.samples.exposurenotification.ExposureNotificationStatusCodes;
+import com.google.samples.exposurenotification.nearby.ExposureNotificationStatusCodes;
 
 import java.util.UUID;
 

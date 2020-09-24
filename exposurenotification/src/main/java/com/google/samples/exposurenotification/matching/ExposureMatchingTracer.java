@@ -30,7 +30,7 @@ import com.google.samples.Hex;
 import com.google.samples.exposurenotification.ExposureKeyExportProto.TemporaryExposureKey.ReportType;
 import com.google.samples.exposurenotification.ExposureNotificationEnums.Infectiousness;
 import com.google.samples.exposurenotification.Log;
-import com.google.samples.exposurenotification.TemporaryExposureKey;
+import com.google.samples.exposurenotification.nearby.TemporaryExposureKey;
 import com.google.samples.exposurenotification.ble.utils.Constants;
 import com.google.samples.exposurenotification.crypto.AesEcbEncryptor;
 import com.google.samples.exposurenotification.crypto.CryptoException;

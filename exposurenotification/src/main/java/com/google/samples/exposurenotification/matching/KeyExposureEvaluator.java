@@ -21,11 +21,11 @@ import android.util.Pair;
 import androidx.annotation.Nullable;
 
 import com.google.common.collect.Iterables;
-import com.google.samples.exposurenotification.ExposureConfiguration;
+import com.google.samples.exposurenotification.nearby.ExposureConfiguration;
 import com.google.samples.exposurenotification.ExposureKeyExportProto.TemporaryExposureKey.ReportType;
 import com.google.samples.exposurenotification.ExposureNotificationEnums.Infectiousness;
 import com.google.samples.exposurenotification.Log;
-import com.google.samples.exposurenotification.TemporaryExposureKey;
+import com.google.samples.exposurenotification.nearby.TemporaryExposureKey;
 import com.google.samples.exposurenotification.features.ContactTracingFeature;
 import com.google.samples.exposurenotification.storage.ExposureRecord;
 import com.google.samples.exposurenotification.storage.ExposureResult;

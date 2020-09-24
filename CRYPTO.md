@@ -38,7 +38,7 @@ The TEKRollingPeriod is the duration for which a Temporary Exposure Key is valid
 minutes). In our current implementation, the TEKRollingPeriod is  144, achieving a key validity of 24 hours. 
 
 The rolling period is part of the 
-`com.google.samples.exposurenotification.TemporaryExposureKey` class and is set by the
+`com.google.samples.exposurenotification.nearby.TemporaryExposureKey` class and is set by the
 `TemporaryExposureKey.Builder#setRollingPeriod` method.
 
 ## Temporary Exposure Key

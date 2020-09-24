@@ -18,7 +18,7 @@ package com.google.samples.exposurenotification.data.generator;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.google.samples.exposurenotification.TemporaryExposureKey;
+import com.google.samples.exposurenotification.nearby.TemporaryExposureKey;
 import com.google.samples.exposurenotification.crypto.AesEcbEncryptor;
 import com.google.samples.exposurenotification.data.DayNumber;
 import com.google.samples.exposurenotification.data.GeneratedRollingProximityId;

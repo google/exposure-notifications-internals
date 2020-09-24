@@ -16,7 +16,7 @@
 
 package com.google.samples.exposurenotification.ble.data;
 
-import com.google.samples.exposurenotification.TemporaryExposureKey;
+import com.google.samples.exposurenotification.nearby.TemporaryExposureKey;
 import com.google.samples.exposurenotification.data.GeneratedRollingProximityId;
 import com.google.samples.exposurenotification.data.TemporaryExposureKeySupport;
 import com.google.samples.exposurenotification.features.ContactTracingFeature;

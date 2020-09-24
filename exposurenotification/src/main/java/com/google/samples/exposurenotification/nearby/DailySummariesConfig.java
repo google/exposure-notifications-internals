@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.google.samples.exposurenotification;
+package com.google.samples.exposurenotification.nearby;
 
 import androidx.annotation.FloatRange;
 import androidx.annotation.Nullable;
 
 import com.google.common.base.Objects;
+import com.google.samples.exposurenotification.ExposureNotificationEnums;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -178,7 +179,7 @@ public class DailySummariesConfig {
 
     /**
      * Minimum score that ExposureWindows must reach in order to be included in the {@link
-     * com.google.samples.exposurenotification.DailySummary.ExposureSummaryData}.
+     * DailySummary.ExposureSummaryData}.
      *
      * <p>Use 0 to consider all {@link ExposureWindow}s (recommended).
      */

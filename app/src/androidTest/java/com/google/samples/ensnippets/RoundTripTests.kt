@@ -19,7 +19,7 @@ package com.google.samples.ensnippets
 import androidx.core.util.Supplier
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.google.samples.exposurenotification.TemporaryExposureKey
+import com.google.samples.exposurenotification.nearby.TemporaryExposureKey
 import com.google.samples.exposurenotification.ble.advertising.RollingProximityIdManager
 import com.google.samples.exposurenotification.ble.interfaces.BleDatabaseWriter
 import com.google.samples.exposurenotification.features.ContactTracingFeature

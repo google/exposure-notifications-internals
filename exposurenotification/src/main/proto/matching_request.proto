@@ -33,7 +33,7 @@ message MatchingRequestProto {
 }
 
 // A proto representation of
-// com.google.samples.exposurenotification.ExposureConfiguration.
+// com.google.samples.exposurenotification.nearby.ExposureConfiguration.
 message ExposureConfigurationProto {
   optional int32 minimum_risk_score = 1;
 

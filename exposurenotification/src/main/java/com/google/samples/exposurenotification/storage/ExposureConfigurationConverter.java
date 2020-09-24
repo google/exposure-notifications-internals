@@ -18,8 +18,8 @@ package com.google.samples.exposurenotification.storage;
 
 import com.google.common.base.Converter;
 import com.google.common.primitives.Ints;
-import com.google.samples.exposurenotification.ExposureConfiguration;
-import com.google.samples.exposurenotification.ExposureConfiguration.ExposureConfigurationBuilder;
+import com.google.samples.exposurenotification.nearby.ExposureConfiguration;
+import com.google.samples.exposurenotification.nearby.ExposureConfiguration.ExposureConfigurationBuilder;
 
 /**
  * Converts between the Android Parcelable {@link ExposureConfiguration} and the proto {@link

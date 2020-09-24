@@ -25,7 +25,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.samples.exposurenotification.Log;
-import com.google.samples.exposurenotification.TemporaryExposureKey;
+import com.google.samples.exposurenotification.nearby.TemporaryExposureKey;
 import com.google.samples.exposurenotification.data.DayNumber;
 import com.google.samples.exposurenotification.features.ContactTracingFeature;
 import com.google.samples.exposurenotification.storage.Encoder.SerialEncoder;

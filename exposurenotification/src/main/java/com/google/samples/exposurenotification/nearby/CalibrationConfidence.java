@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package com.google.samples.exposurenotification;
+package com.google.samples.exposurenotification.nearby;
 
 import androidx.annotation.IntDef;
+
+import com.google.samples.exposurenotification.ExposureNotificationEnums;
 
 /**
  * Calibration confidence defined for an {@link ExposureWindow}.

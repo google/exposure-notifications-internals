@@ -20,7 +20,7 @@ import android.os.Build.VERSION_CODES;
 
 import androidx.annotation.RequiresApi;
 
-import com.google.samples.exposurenotification.TemporaryExposureKey;
+import com.google.samples.exposurenotification.nearby.TemporaryExposureKey;
 import com.google.samples.exposurenotification.crypto.CryptoException;
 import com.google.samples.exposurenotification.crypto.KeyDerivation;
 import com.google.samples.exposurenotification.data.AssociatedEncryptedMetadata;

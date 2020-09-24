@@ -19,7 +19,7 @@ package com.google.samples.exposurenotification.storage;
 import androidx.annotation.NonNull;
 
 import com.google.samples.exposurenotification.Log;
-import com.google.samples.exposurenotification.TemporaryExposureKey;
+import com.google.samples.exposurenotification.nearby.TemporaryExposureKey;
 import com.google.samples.exposurenotification.data.TemporaryExposureKeySupport;
 
 import java.io.IOException;

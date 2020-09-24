@@ -19,9 +19,9 @@ package com.google.samples.exposurenotification.matching;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.samples.Clock;
 import com.google.samples.Clock.DefaultClock;
-import com.google.samples.exposurenotification.ExposureConfiguration;
-import com.google.samples.exposurenotification.RiskLevel;
-import com.google.samples.exposurenotification.TemporaryExposureKey;
+import com.google.samples.exposurenotification.nearby.ExposureConfiguration;
+import com.google.samples.exposurenotification.nearby.RiskLevel;
+import com.google.samples.exposurenotification.nearby.TemporaryExposureKey;
 import com.google.samples.exposurenotification.features.ContactTracingFeature;
 import com.google.samples.exposurenotification.storage.ExposureRecord;
 

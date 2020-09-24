@@ -36,8 +36,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.google.samples.exposurenotification.DiagnosisKeysDataMapping.MAXIMUM_OFFSET_OF_DAYS_SINCE_ONSET;
-import static com.google.samples.exposurenotification.DiagnosisKeysDataMapping.SIZE_OF_DAYS_SINCE_ONSET_TO_INFECTIOUSNESS;
+import static com.google.samples.exposurenotification.nearby.DiagnosisKeysDataMapping.MAXIMUM_OFFSET_OF_DAYS_SINCE_ONSET;
+import static com.google.samples.exposurenotification.nearby.DiagnosisKeysDataMapping.SIZE_OF_DAYS_SINCE_ONSET_TO_INFECTIOUSNESS;
 import static com.google.samples.exposurenotification.ExposureKeyExportProto.TemporaryExposureKey.ReportType.REPORT_TYPE_UNKNOWN;
 import static com.google.samples.exposurenotification.matching.ExposureMatchingTracer.TOKEN_A;
 import static java.lang.Math.min;
@@ -108,7 +108,7 @@ public class ExposureWindowUtils {
     }
 
     public static ReportType getReportType(
-            @com.google.samples.exposurenotification.ReportType int reportTypeValue,
+            @com.google.samples.exposurenotification.nearby.ReportType int reportTypeValue,
             ReportType defaultReportType) {
         ReportType reportType = ReportType.forNumber(reportTypeValue);
         if (reportType == null || REPORT_TYPE_UNKNOWN.equals(reportType)) {

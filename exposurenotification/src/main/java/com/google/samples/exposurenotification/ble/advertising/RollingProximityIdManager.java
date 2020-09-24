@@ -21,7 +21,7 @@ import androidx.core.util.Supplier;
 
 import com.google.common.base.Preconditions;
 import com.google.samples.exposurenotification.Log;
-import com.google.samples.exposurenotification.TemporaryExposureKey;
+import com.google.samples.exposurenotification.nearby.TemporaryExposureKey;
 import com.google.samples.exposurenotification.ble.interfaces.BleDatabaseWriter;
 import com.google.samples.exposurenotification.ble.utils.Constants;
 import com.google.samples.exposurenotification.crypto.CryptoException;

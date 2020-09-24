@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.samples.exposurenotification;
+package com.google.samples.exposurenotification.nearby;
 
 import android.os.Parcel;
 import android.os.Parcelable;

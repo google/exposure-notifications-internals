@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package com.google.samples.exposurenotification;
+package com.google.samples.exposurenotification.nearby;
 
 import androidx.annotation.Nullable;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.samples.exposurenotification.ExposureNotificationEnums;
 
 import java.util.Arrays;
 import java.util.HashMap;

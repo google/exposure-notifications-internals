@@ -16,7 +16,7 @@
 
 package com.google.samples.exposurenotification.data.generator;
 
-import com.google.samples.exposurenotification.TemporaryExposureKey;
+import com.google.samples.exposurenotification.nearby.TemporaryExposureKey;
 import com.google.samples.exposurenotification.features.ContactTracingFeature;
 
 import java.security.SecureRandom;
