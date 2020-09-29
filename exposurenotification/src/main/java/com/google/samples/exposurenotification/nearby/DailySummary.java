@@ -16,50 +16,61 @@
 
 package com.google.samples.exposurenotification.nearby;
 
+import android.os.Parcel;
+
 import androidx.annotation.Nullable;
 
 import com.google.common.base.Objects;
+import com.google.samples.exposurenotification.annotations.Hide;
 import com.google.samples.exposurenotification.nearby.DailySummary.ExposureSummaryData.ExposureSummaryDataBuilder;
+import com.google.samples.exposurenotification.safeparcel.AbstractSafeParcelable;
+import com.google.samples.exposurenotification.safeparcel.ReflectedParcelable;
+import com.google.samples.exposurenotification.safeparcel.SafeParcelable;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Daily exposure summary to pass to client side.
- */
-public class DailySummary {
 
+/** Daily exposure summary to pass to client side. */
+@SafeParcelable.Class(creator = "DailySummaryCreator")
+public class DailySummary extends AbstractSafeParcelable implements ReflectedParcelable {
+
+    @Field(id = 1, getter = "getDaysSinceEpoch")
     int daysSinceEpoch;
+
+    @Field(id = 2, getter = "getReportSummaries")
     List<ExposureSummaryData> reportSummaries;
+
+    @Field(id = 3, getter = "getSummaryData")
     ExposureSummaryData summaryData;
 
+    @Constructor
     DailySummary(
-            int daysSinceEpoch,
-            List<ExposureSummaryData> reportSummaries,
-            ExposureSummaryData summaryData) {
+            @Param(id = 1) int daysSinceEpoch,
+            @Param(id = 2) List<ExposureSummaryData> reportSummaries,
+            @Param(id = 3) ExposureSummaryData summaryData) {
         this.daysSinceEpoch = daysSinceEpoch;
         this.reportSummaries = reportSummaries;
         this.summaryData = summaryData;
     }
 
-    /**
-     * Returns days since epoch of the {@link ExposureWindow}s that went into this summary.
-     */
+    /** Returns days since epoch of the {@link ExposureWindow}s that went into this summary. */
     public int getDaysSinceEpoch() {
         return daysSinceEpoch;
     }
 
-    /**
-     * Summary of all exposures on this day of a specific diagnosis {@link ReportType}.
-     */
+    /** Summary of all exposures on this day of a specific diagnosis {@link ReportType}. */
     public ExposureSummaryData getSummaryDataForReportType(@ReportType int reportType) {
         return reportSummaries.get(reportType);
     }
 
-    /**
-     * Summary of all exposures on this day.
-     */
+    /** For {@link #CREATOR} to serialize {@link #reportSummaries}. */
+    List<ExposureSummaryData> getReportSummaries() {
+        return reportSummaries;
+    }
+
+    /** Summary of all exposures on this day. */
     public ExposureSummaryData getSummaryData() {
         return summaryData;
     }
@@ -95,6 +106,7 @@ public class DailySummary {
      *
      * @hide
      */
+    @Hide
     public static final class DailySummaryBuilder {
         private int daysSinceEpoch = 0;
         private ExposureSummaryData[] reportSummaries =
@@ -126,19 +138,25 @@ public class DailySummary {
         }
     }
 
-    /**
-     * Stores different scores for specific {@link ReportType}.
-     */
-    public static class ExposureSummaryData {
+    /** Stores different scores for specific {@link ReportType}. */
+    @SafeParcelable.Class(creator = "ExposureSummaryDataCreator")
+    public static class ExposureSummaryData extends AbstractSafeParcelable
+            implements ReflectedParcelable {
 
+        @Field(id = 1, getter = "getMaximumScore")
         double maximumScore;
+
+        @Field(id = 2, getter = "getScoreSum")
         double scoreSum;
+
+        @Field(id = 3, getter = "getWeightedDurationSum")
         double weightedDurationSum;
 
+        @Constructor
         ExposureSummaryData(
-                double maximumScore,
-                double scoreSum,
-                double weightedDurationSum) {
+                @Param(id = 1) double maximumScore,
+                @Param(id = 2) double scoreSum,
+                @Param(id = 3) double weightedDurationSum) {
             this.maximumScore = maximumScore;
             this.scoreSum = scoreSum;
             this.weightedDurationSum = weightedDurationSum;
@@ -203,9 +221,8 @@ public class DailySummary {
                     weightedDurationSum);
         }
 
-        /**
-         * A builder for {@link ExposureSummaryData}. @hide
-         */
+        /** A builder for {@link ExposureSummaryData}. @hide */
+        @Hide
         public static final class ExposureSummaryDataBuilder {
             private double maximumScore = 0;
             private double scoreSum = 0;

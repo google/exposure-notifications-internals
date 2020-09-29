@@ -19,6 +19,8 @@ package com.google.samples.exposurenotification.nearby;
 import androidx.annotation.Nullable;
 
 import com.google.common.base.Objects;
+import com.google.samples.exposurenotification.safeparcel.AbstractSafeParcelable;
+import com.google.samples.exposurenotification.safeparcel.SafeParcelable;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -42,31 +44,52 @@ import static com.google.common.base.Preconditions.checkArgument;
  *
  * @deprecated no longer used with Exposure Windows API.
  */
+@SafeParcelable.Class(creator = "ExposureConfigurationCreator")
 @Deprecated
-public final class ExposureConfiguration {
+public final class ExposureConfiguration extends AbstractSafeParcelable {
 
+    @Field(id = 1, getter = "getMinimumRiskScore")
     int minimumRiskScore;
+
+    @Field(id = 2, getter = "getAttenuationScores")
     int[] attenuationScores;
+
+    @Field(id = 3, getter = "getAttenuationWeight")
     int attenuationWeight;
+
+    @Field(id = 4, getter = "getDaysSinceLastExposureScores")
     int[] daysSinceLastExposureScores;
+
+    @Field(id = 5, getter = "getDaysSinceLastExposureWeight")
     int daysSinceLastExposureWeight;
+
+    @Field(id = 6, getter = "getDurationScores")
     int[] durationScores;
+
+    @Field(id = 7, getter = "getDurationWeight")
     int durationWeight;
+
+    @Field(id = 8, getter = "getTransmissionRiskScores")
     int[] transmissionRiskScores;
+
+    @Field(id = 9, getter = "getTransmissionRiskWeight")
     int transmissionRiskWeight;
+
+    @Field(id = 10, getter = "getDurationAtAttenuationThresholds")
     int[] durationAtAttenuationThresholds;
 
+    @Constructor
     ExposureConfiguration(
-            int minimumRiskScore,
-            int[] attenuationScores,
-            int attenuationWeight,
-            int[] daysSinceLastExposureScores,
-            int daysSinceLastExposureWeight,
-            int[] durationScores,
-            int durationWeight,
-            int[] transmissionRiskScores,
-            int transmissionRiskWeight,
-            int[] durationAtAttenuationThresholds) {
+            @Param(id = 1) int minimumRiskScore,
+            @Param(id = 2) int[] attenuationScores,
+            @Param(id = 3) int attenuationWeight,
+            @Param(id = 4) int[] daysSinceLastExposureScores,
+            @Param(id = 5) int daysSinceLastExposureWeight,
+            @Param(id = 6) int[] durationScores,
+            @Param(id = 7) int durationWeight,
+            @Param(id = 8) int[] transmissionRiskScores,
+            @Param(id = 9) int transmissionRiskWeight,
+            @Param(id = 10) int[] durationAtAttenuationThresholds) {
         this.minimumRiskScore = minimumRiskScore;
         this.attenuationScores = attenuationScores;
         this.attenuationWeight = attenuationWeight;

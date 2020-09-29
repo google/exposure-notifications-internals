@@ -16,7 +16,7 @@
 
 package com.google.samples.exposurenotification.ble.interfaces;
 
-import com.google.samples.exposurenotification.ble.data.AdvertisementPacket;
+import com.google.samples.exposurenotification.nearby.AdvertisementPacket;
 import com.google.samples.exposurenotification.crypto.CryptoException;
 
 /**

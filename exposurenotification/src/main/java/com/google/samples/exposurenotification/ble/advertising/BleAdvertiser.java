@@ -16,7 +16,6 @@
 
 package com.google.samples.exposurenotification.ble.advertising;
 
-import android.annotation.SuppressLint;
 import android.bluetooth.le.AdvertiseCallback;
 import android.bluetooth.le.AdvertiseData;
 import android.bluetooth.le.AdvertiseSettings;
@@ -31,7 +30,7 @@ import androidx.annotation.RequiresApi;
 import androidx.core.util.Consumer;
 
 import com.google.samples.exposurenotification.Log;
-import com.google.samples.exposurenotification.ble.data.AdvertisementPacket;
+import com.google.samples.exposurenotification.nearby.AdvertisementPacket;
 import com.google.samples.exposurenotification.ble.utils.Constants.StatusCode;
 import com.google.samples.exposurenotification.features.ContactTracingFeature;
 

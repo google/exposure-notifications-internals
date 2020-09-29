@@ -19,7 +19,7 @@ package com.google.samples.exposurenotification.ble.advertising;
 import androidx.annotation.VisibleForTesting;
 
 import com.google.samples.exposurenotification.Log;
-import com.google.samples.exposurenotification.ble.data.AdvertisementPacket;
+import com.google.samples.exposurenotification.nearby.AdvertisementPacket;
 import com.google.samples.exposurenotification.ble.interfaces.BleKeyGenerator;
 import com.google.samples.exposurenotification.crypto.CryptoException;
 import com.google.samples.exposurenotification.data.AssociatedEncryptedMetadata;

@@ -10,7 +10,11 @@ It is nonetheless possible to compile this code in order to run the various test
 
 ## Dependencies
 
-This project depends on a few third-party, open source libraries:
+This project requires Java 9 to build the `exposurenotification` subproject. You can check the Java
+version by running `java -version`. If you want to be able to build from Android Studio, you can
+change the JDK location under `File > Project Structure > JDK Location`.
+
+This also project depends on a few third-party, open source libraries:
 
 * [BoringSSL](https://boringssl.googlesource.com/boringssl/)
 * [NaoPB](https://jpa.kapsi.fi/nanopb/download/)
