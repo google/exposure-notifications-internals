@@ -564,9 +564,10 @@ limiting trackability. We note that:
     scenarios to lessen risks.
 6.  The movements and interactions of COVID-positive users are revealed to a
     much greater extent by some manual contact tracing methods.
-7.  Any app capturing BLE RPIs that is detected in Google Play's rigorous
-    review process would be removed from the Play Store.
-
+7.  Google Play’s policies forbid the malicious use of BLE scanning, and
+    Play’s rigorous review processes are designed to detect it. Any app
+    found to be explicitly capturing BLE RPIs will be removed.
+	
 #### Additional considerations
 
 **Cuckoo filter approach as a mitigation**
@@ -665,6 +666,20 @@ or RPI rotation.
 
     *   Signal strength can be assumed to be invariant between adjacent frames
         and can therefore also be used to link sources across frames.
+
+For the sake of transparency, we note that this issue was confirmed on a
+subset of Android devices globally.  These issues likely resulted from
+how certain OEMs have implemented Bluetooth since, for the reasons noted
+above, the [Android Compatibility Definition Document](https://source.android.com/compatibility/10/android-10-cdd#7_4_3_bluetooth) (CDD) does not
+require rotation in sync.  After extensive testing, a change to EN has
+nevertheless been rolled out that removes this opportunity for
+device-specific misbehavior with respect to EN for all devices. The RPI
+is now set to a globally fixed value for a small number of BLE frames
+surrounding the RPI rollover.
+
+As noted above, Google Play’s policies forbid the malicious use of BLE
+scanning, and Play’s rigorous review processes are designed to detect
+it. Any app found to be explicitly capturing BLE RPIs will be removed.
 
 ### Linking diagnosis keys through export file analysis
 
