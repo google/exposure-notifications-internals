@@ -1,7 +1,8 @@
 # Exposure Notifications API
 
 This repository contains a snapshot of code from Google Play Services' [Exposure Notifications
- module][1].
+ module][1]. It was published as part of a [transparency effort][5], and there are no current
+ plans to update the code contained within the repo.
 
 ## Key Features
 
@@ -72,5 +73,5 @@ A `MatchingJni` object is initialized with a list of scanned RPIs from the past 
 [2]: exposurenotification/src/main/java/com/google/samples/exposurenotification/ble/advertising/BleAdvertiser.java
 [3]: https://blog.google/documents/70/Exposure_Notification_-_Bluetooth_Specification_v1.2.2.pdf
 [4]: https://blog.google/documents/69/Exposure_Notification_-_Cryptography_Specification_v1.2.1.pdf
-
+[5]: https://blog.google/inside-google/company-announcements/update-exposure-notifications/
 
